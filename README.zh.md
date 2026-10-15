@@ -149,6 +149,10 @@ sudo systemctl enable --now greetd.service
 greetd 启动 Fomalhaut 后，可以选择发现的用户或使用手工登录，选择可用的桌面会话，并依次回答
 系统 PAM 配置给出的认证提示。认证成功后，Fomalhaut 将会话交还给 greetd，并在桌面启动后退出。
 
+切换到 greetd 后，如果应用提示解锁登录密钥环，需要在 greetd 的 PAM 配置中启用 GNOME
+Keyring 自动解锁。配置方法、密码要求和反复弹窗的排查步骤见
+[登录密钥环配置](docs/CONFIGURATION.md#登录时自动解锁-gnome-keyring)。
+
 系统配置文件位于 `/etc/fomalhaut/config.toml`，可以设置主题、界面语言覆盖、显示缩放、用户
 provider、会话搜索目录和可选电源操作。配置格式、greetd/Cage 示例和外部主题用法见
 [配置文档](docs/CONFIGURATION.md)。
