@@ -203,9 +203,10 @@ by your system's PAM configuration. Fomalhaut hands the authenticated session
 back to greetd and exits once the desktop starts.
 
 If applications prompt to unlock the login keyring after switching to greetd,
-configure GNOME Keyring auto-unlock in greetd's PAM stack. See
-[login keyring setup and troubleshooting](docs/CONFIGURATION.en.md#automatically-unlocking-gnome-keyring-at-login)
-for the configuration, password requirements, and checks for repeated prompts.
+configure the keyring service used by your desktop in greetd's PAM stack. See
+[login keyring setup and troubleshooting](docs/CONFIGURATION.en.md#automatically-unlocking-the-login-keyring-at-login)
+for common keyring services, an Arch Linux configuration example, and checks
+for repeated prompts.
 
 System configuration lives at `/etc/fomalhaut/config.toml`. It controls the
 theme, UI locale override, display scale, account provider, session search

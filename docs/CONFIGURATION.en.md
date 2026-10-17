@@ -231,17 +231,34 @@ Use an absolute `--prefix` for a nondefault installation prefix.
 directory without invoking `sudo`; it cannot be combined with `--restart`.
 See `./install.sh --help` for all options.
 
-## Automatically unlocking GNOME Keyring at login
+## Automatically unlocking the login keyring at login
 
 After switching from SDDM, GDM, or another display manager to greetd, applications
 that need stored credentials may display “Unlock Login Keyring” or “The login
 keyring did not get unlocked when you logged into your computer.” Check greetd's
-PAM configuration: the previous display manager's keyring configuration does
-not automatically apply to greetd. Fomalhaut delegates login authentication to
-greetd, while system PAM configuration handles automatic keyring unlocking.
-The current installer and AUR packages leave `/etc/pam.d/greetd` unchanged.
+PAM configuration. The desktop and session determine which keyring service is
+used; Fomalhaut does not depend on or prescribe a specific implementation. The
+previous display manager's keyring configuration does not automatically apply
+to greetd. Automatic unlocking is handled by the selected keyring service's PAM
+module, while the current installer and AUR packages leave
+`/etc/pam.d/greetd` unchanged.
 
-### Configuration steps (Arch Linux)
+### Common keyring implementations
+
+First determine which keyring service your desktop session uses, then follow its
+documentation:
+
+| Keyring | Common environment | ArchWiki |
+| --- | --- | --- |
+| GNOME Keyring | GNOME and applications using the Secret Service API | [GNOME/Keyring](https://wiki.archlinux.org/title/GNOME/Keyring) |
+| KDE Wallet | KDE Plasma | [KDE Wallet](https://wiki.archlinux.org/title/KDE_Wallet) |
+
+KDE Wallet uses a different PAM module. Its implementation and configuration
+parameters can change with the Plasma version, so do not apply the GNOME
+Keyring module lines below directly to KWallet. Follow the ArchWiki,
+distribution documentation, and your actual PAM configuration.
+
+### GNOME Keyring example configuration (Arch Linux)
 
 These steps apply to password logins using GNOME Keyring. Ensure that
 `gnome-keyring` is installed and that the password for the `login` keyring
@@ -294,7 +311,7 @@ that unlocking is no longer requested. To roll back, restore
 administrator terminal available while editing PAM until you have verified a
 new login.
 
-### Repeated unlock prompts after login
+### Repeated GNOME Keyring unlock prompts after login
 
 Automatic unlocking configures password delivery at login. If you successfully
 unlock the keyring and receive another prompt in the same desktop session,
@@ -317,8 +334,7 @@ does not establish a Fomalhaut authentication defect or a damaged keyring file.
 
 This setup targets `/etc/pam.d/greetd` for greetd login.
 `/etc/pam.d/fomalhaut-lock` handles reauthentication when unlocking the current
-user's screen; changing it does not configure login. KWallet uses different PAM
-modules, so the GNOME Keyring instructions do not apply directly to KWallet.
+user's screen; changing it does not configure login.
 
 References: [GNOME Keyring PAM module source](https://gitlab.gnome.org/GNOME/gnome-keyring/-/tree/main/pam),
 [ArchWiki GNOME/Keyring](https://wiki.archlinux.org/title/GNOME/Keyring).
